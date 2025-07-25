@@ -121,13 +121,39 @@
             </div>
             
             <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-4">
+            <div class="space-y-4">
                 {% if user.is_authenticated %}
                     {% if product.pr_stk_quant > 0 %}
-                        <a href="{% url 'add_to_cart' product.pr_id %}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-shopping-cart mr-2"></i>
-                            Add to Cart
-                        </a>
+                        <!-- Quantity and Add to Cart -->
+                        <div class="flex flex-wrap items-center gap-4">
+                            <div class="flex items-center gap-2">
+                                <label class="font-semibold">Quantity:</label>
+                                <div class="join">
+                                    <button class="btn btn-sm join-item" onclick="changeQuantity(-1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" id="quantity" value="1" min="1" max="{{ product.pr_stk_quant }}" 
+                                           class="input input-sm join-item w-16 text-center">
+                                    <button class="btn btn-sm join-item" onclick="changeQuantity(1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <span class="text-sm text-base-content opacity-70">
+                                    ({{ product.pr_stk_quant }} available)
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="addToCart({{ product.pr_id }})" class="btn btn-primary btn-lg">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                Add to Cart
+                            </button>
+                            <button onclick="buyNow({{ product.pr_id }})" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-bolt mr-2"></i>
+                                Buy Now
+                            </button>
+                        </div>
                     {% endif %}
                     
                     <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-lg">
@@ -195,4 +221,101 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+// Quantity control functions
+function changeQuantity(delta) {
+    const quantityInput = document.getElementById('quantity');
+    let currentValue = parseInt(quantityInput.value);
+    let newValue = currentValue + delta;
+    
+    if (newValue >= 1 && newValue <= {{ product.pr_stk_quant }}) {
+        quantityInput.value = newValue;
+    }
+}
+
+// Add to cart function
+function addToCart(productId) {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const csrfToken = '{{ csrf_token }}';
+    
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ quantity: quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCounter(data.cart_count);
+            showMessage(data.message, 'success');
+            
+            // Show cart button animation or redirect
+            setTimeout(() => {
+                if (confirm('Item added to cart! Would you like to view your cart?')) {
+                    window.location.href = '/cart/';
+                }
+            }, 1000);
+        } else {
+            showMessage(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('An error occurred. Please try again.', 'error');
+    });
+}
+
+// Buy now function
+function buyNow(productId) {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const csrfToken = '{{ csrf_token }}';
+    
+    // First add to cart
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ quantity: quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to cart/checkout
+            window.location.href = '/cart/';
+        } else {
+            showMessage(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('An error occurred. Please try again.', 'error');
+    });
+}
+
+// Show message function
+function showMessage(message, type) {
+    // Create toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'} shadow-lg fixed top-4 right-4 z-50 max-w-md`;
+    toast.innerHTML = `
+        <div>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
 {% endblock %} 
