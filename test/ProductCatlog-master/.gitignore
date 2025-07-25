@@ -1,0 +1,60 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+venv/
+ENV/
+.env
+.env.*
+
+# Django files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+
+# Django migration and local data
+db.sqlite3
+*.bak
+*.swp
+
+# Media and static files (user uploads and collected static files)
+media/
+static/
+staticfiles/
+
+# Node modules (TailwindCSS, DaisyUI)
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# OS-specific junk files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+.cache
+nosetests.xml
+*.cover
+
+# Pytest
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Others
+*.orig
+*.sublime-workspace
+*.sublime-project
