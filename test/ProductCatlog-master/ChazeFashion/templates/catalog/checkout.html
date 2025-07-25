@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - ChazeFashion{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-4">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">
+            <i class="fas fa-credit-card mr-2"></i>
+            Checkout
+        </h1>
+        
+        {% if cart_items %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Shipping and Payment Information -->
+            <div class="lg:col-span-2">
+                <!-- Shipping Address -->
+                <div class="card bg-base-100 shadow-lg mb-6">
+                    <div class="card-body">
+                        <h2 class="text-xl font-bold mb-4">
+                            <i class="fas fa-shipping-fast mr-2"></i>
+                            Shipping Address
+                        </h2>
+                        <form>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">First Name</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered" value="{{ user.first_name }}" required>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Last Name</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered" value="{{ user.last_name }}" required>
+                                </div>
+                                <div class="form-control md:col-span-2">
+                                    <label class="label">
+                                        <span class="label-text">Street Address</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered" 
+                                           value="{% if user.userprofile.address %}{{ user.userprofile.address }}{% endif %}" required>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">City</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered" required>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">State</span>
+                                    </label>
+                                    <select class="select select-bordered">
+                                        <option disabled selected>Select State</option>
+                                        <option>Delhi</option>
+                                        <option>Maharashtra</option>
+                                        <option>Karnataka</option>
+                                        <option>Tamil Nadu</option>
+                                        <option>Gujarat</option>
+                                        <option>Rajasthan</option>
+                                        <option>Uttar Pradesh</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">PIN Code</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered" pattern="[0-9]{6}" required>
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">Phone Number</span>
+                                    </label>
+                                    <input type="tel" class="input input-bordered" 
+                                           value="{% if user.userprofile.phone %}{{ user.userprofile.phone }}{% endif %}" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h2 class="text-xl font-bold mb-4">
+                            <i class="fas fa-credit-card mr-2"></i>
+                            Payment Method
+                        </h2>
+                        <div class="space-y-4">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="payment" class="radio radio-primary" value="cod" checked>
+                                <span class="label-text ml-2">
+                                    <i class="fas fa-money-bill-wave mr-2"></i>
+                                    Cash on Delivery
+                                </span>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="payment" class="radio radio-primary" value="upi">
+                                <span class="label-text ml-2">
+                                    <i class="fab fa-google-pay mr-2"></i>
+                                    UPI Payment
+                                </span>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="payment" class="radio radio-primary" value="card">
+                                <span class="label-text ml-2">
+                                    <i class="fas fa-credit-card mr-2"></i>
+                                    Credit/Debit Card
+                                </span>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="payment" class="radio radio-primary" value="wallet">
+                                <span class="label-text ml-2">
+                                    <i class="fas fa-wallet mr-2"></i>
+                                    Wallet (₹{{ user.userprofile.wallet_balance|default:0 }})
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="card bg-base-100 shadow-lg sticky top-4">
+                    <div class="card-body">
+                        <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                        
+                        <!-- Order Items -->
+                        <div class="space-y-3 mb-4">
+                            {% for item in cart_items %}
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-lg overflow-hidden">
+                                    {% if item.product.pr_images %}
+                                        <img src="{{ item.product.pr_images.url }}" 
+                                             alt="{{ item.product.pr_name }}" 
+                                             class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full bg-base-300 flex items-center justify-center">
+                                            <i class="fas fa-tshirt text-xs"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold">{{ item.product.pr_name }}</p>
+                                    <p class="text-xs text-base-content opacity-70">Qty: {{ item.quantity }}</p>
+                                </div>
+                                <div class="text-sm font-bold">
+                                    ₹{% widthratio item.product.pr_price 1 item.quantity %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <!-- Cost Breakdown -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span>Subtotal ({{ cart_count }} items)</span>
+                                <span>₹{{ subtotal|floatformat:2 }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>Shipping</span>
+                                <span class="{% if shipping_cost == 0 %}text-green-600{% endif %}">
+                                    {% if shipping_cost == 0 %}FREE{% else %}₹{{ shipping_cost|floatformat:2 }}{% endif %}
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>Tax (10%)</span>
+                                <span>₹{{ tax_amount|floatformat:2 }}</span>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="flex justify-between text-lg font-bold">
+                                <span>Total</span>
+                                <span class="text-primary">₹{{ total|floatformat:2 }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Info -->
+                        <div class="bg-base-200 rounded-lg p-3 mt-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class="fas fa-truck text-primary"></i>
+                                <span class="font-semibold text-sm">Delivery</span>
+                            </div>
+                            <p class="text-xs text-base-content opacity-70">
+                                Expected delivery: 3-5 business days
+                            </p>
+                        </div>
+
+                        <!-- Place Order Button -->
+                        <button class="btn btn-primary w-full mt-6" onclick="placeOrder()">
+                            <i class="fas fa-check mr-2"></i>
+                            Place Order
+                        </button>
+
+                        <!-- Back to Cart -->
+                        <a href="{% url 'view_cart' %}" class="btn btn-outline w-full mt-2">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="text-center py-16">
+            <div class="text-8xl mb-6">🛒</div>
+            <h2 class="text-2xl font-bold mb-4">Your cart is empty</h2>
+            <p class="text-base-content opacity-70 mb-8">
+                Add some items to your cart before proceeding to checkout.
+            </p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-shopping-bag mr-2"></i>
+                Start Shopping
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function placeOrder() {
+    // Here you would typically validate the form and process the order
+    // For now, we'll show a success message
+    
+    if (confirm('Are you sure you want to place this order?')) {
+        // Simulate order processing
+        showMessage('Order placed successfully! You will receive a confirmation email shortly.', 'success');
+        
+        // Redirect to a success page or home page after a delay
+        setTimeout(() => {
+            window.location.href = '{% url "home" %}';
+        }, 2000);
+    }
+}
+
+function showMessage(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'} shadow-lg fixed top-4 right-4 z-50 max-w-md`;
+    toast.innerHTML = `
+        <div>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

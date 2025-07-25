@@ -146,15 +146,41 @@
                             </div>
                         </div>
                         
-                        <div class="card-actions justify-end">
+                        <!-- Stock Status -->
+                        {% if product.pr_stk_quant > 0 %}
+                            {% if product.pr_stk_quant <= 5 %}
+                                <div class="text-orange-600 text-xs mb-2">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Only {{ product.pr_stk_quant }} left
+                                </div>
+                            {% else %}
+                                <div class="text-green-600 text-xs mb-2">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    In Stock
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-red-600 text-xs mb-2">
+                                <i class="fas fa-times-circle mr-1"></i>
+                                Out of Stock
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-actions justify-between">
                             <a href="{% url 'product_detail' product.pr_id %}" class="btn btn-primary btn-sm">
                                 View Details
                             </a>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'add_to_cart' product.pr_id %}" class="btn btn-outline btn-sm">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </a>
-                                <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm">
+                            {% if user.is_authenticated and product.pr_stk_quant > 0 %}
+                                <div class="flex gap-1">
+                                    <button onclick="quickAddToCart({{ product.pr_id }})" class="btn btn-outline btn-sm" title="Add to Cart">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </button>
+                                    <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm" title="Add to Wishlist">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                </div>
+                            {% elif user.is_authenticated %}
+                                <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm" title="Add to Wishlist">
                                     <i class="fas fa-heart"></i>
                                 </a>
                             {% endif %}
@@ -175,4 +201,53 @@
         </div>
     </div>
 </div>
+
+<script>
+// Quick add to cart function for product list
+function quickAddToCart(productId) {
+    const csrfToken = '{{ csrf_token }}';
+    
+    fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ quantity: 1 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartCounter(data.cart_count);
+            showMessage(data.message, 'success');
+        } else {
+            showMessage(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMessage('An error occurred. Please try again.', 'error');
+    });
+}
+
+// Show message function
+function showMessage(message, type) {
+    // Create toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'} shadow-lg fixed top-4 right-4 z-50 max-w-md`;
+    toast.innerHTML = `
+        <div>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
 {% endblock %} 
