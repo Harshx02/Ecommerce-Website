@@ -61,8 +61,8 @@
             <!-- Cart Button -->
             <a href="{% url 'view_cart' %}" class="btn btn-ghost btn-circle relative">
                 <i class="fas fa-shopping-cart"></i>
-                <span id="cart-counter" class="cart-counter badge badge-primary {% if cart|length == 0 %}hidden{% endif %}">
-                    {{ cart|length }}
+                <span id="cart-counter" class="cart-counter badge badge-primary {% if cart_length == 0 %}hidden{% endif %}">
+                    {{ cart_length }}
                 </span>
             </a>
 
