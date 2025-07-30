@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 import json
 from .models import Product, UserProfile, Cart, Wishlist, Order, CartItem
 from .forms import UserProfileForm
@@ -84,8 +85,21 @@ def profile(request):
     return render(request, 'catalog/profile.html', context)
 
 def product_list(request):
-    """Product catalog with filtering"""
+    """Product catalog with filtering and search"""
     products = Product.objects.all()
+    
+    # Search functionality
+    search_query = request.GET.get('search')
+    if search_query:
+        products = products.filter(
+            Q(pr_name__icontains=search_query) |
+            Q(pr_description__icontains=search_query) |
+            Q(pr_brand__icontains=search_query) |
+            Q(pr_item_type__icontains=search_query) |
+            Q(pr_cate__icontains=search_query) |
+            Q(pr_fabric__icontains=search_query) |
+            Q(pr_color__icontains=search_query)
+        )
     
     # Filtering
     category = request.GET.get('category')
@@ -94,6 +108,9 @@ def product_list(request):
     price_min = request.GET.get('price_min')
     price_max = request.GET.get('price_max')
     brand = request.GET.get('brand')
+    item_type = request.GET.get('item_type')
+    color = request.GET.get('color')
+    size = request.GET.get('size')
     
     if category:
         products = products.filter(pr_cate=category)
@@ -107,11 +124,23 @@ def product_list(request):
         products = products.filter(pr_price__lte=price_max)
     if brand:
         products = products.filter(pr_brand__icontains=brand)
+    if item_type:
+        products = products.filter(pr_item_type=item_type)
+    if color:
+        products = products.filter(pr_color__icontains=color)
+    if size:
+        products = products.filter(pr_size=size)
+    
+    # Order by featured products first, then by creation date
+    products = products.order_by('-is_featured', '-created_at')
     
     context = {
         'products': products,
         'categories': Product.CATEGORY_CHOICES,
         'seasons': Product.SEASON_CHOICES,
+        'item_types': Product.ITEM_TYPE_CHOICES,
+        'sizes': Product.SIZE_CHOICES,
+        'search_query': search_query,
     }
     return render(request, 'catalog/product_list.html', context)
 
