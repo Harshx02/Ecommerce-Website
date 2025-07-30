@@ -1,109 +1,132 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="hero min-h-[60vh] bg-gradient-to-r from-primary to-secondary">
-    <div class="hero-content text-center text-neutral-content">
-        <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">Welcome to ChazeFashion</h1>
-            <p class="mb-5">Discover the latest trends in fashion. From casual wear to formal attire, we have everything you need to express your unique style.</p>
-            <a href="{% url 'product_list' %}" class="btn btn-primary">Shop Now</a>
+<!-- Hero Section with Netflix-inspired design -->
+<div class="hero min-h-[70vh] relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-red-900 opacity-90"></div>
+    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3')] bg-cover bg-center opacity-20"></div>
+    <div class="hero-content text-center text-white relative z-10">
+        <div class="max-w-2xl">
+            <h1 class="mb-6 text-6xl font-bold leading-tight">
+                Welcome to <span class="text-red-500">ChazeFashion</span>
+            </h1>
+            <p class="mb-8 text-xl leading-relaxed opacity-90">
+                Discover the latest trends in fashion. From casual wear to formal attire, we have everything you need to express your unique style with premium quality and unmatched elegance.
+            </p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <a href="{% url 'product_list' %}" class="netflix-red-btn btn btn-lg px-8">
+                    <i class="fas fa-shopping-bag mr-2"></i>
+                    Shop Now
+                </a>
+                <a href="{% url 'product_list' %}?item_type=suits" class="btn btn-outline border-white text-white hover:bg-white hover:text-black btn-lg px-8">
+                    <i class="fas fa-user-tie mr-2"></i>
+                    View Collections
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Categories Section -->
-<div class="py-16 bg-base-200">
+<!-- Featured Categories Section -->
+<div class="py-20 bg-gradient-to-b from-black to-gray-900">
     <div class="container mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            <!-- Men -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <figure class="px-10 pt-10">
+        <h2 class="text-4xl font-bold text-center mb-4 text-white">Shop by Category</h2>
+        <p class="text-center text-gray-400 mb-16 text-lg">Explore our curated collections designed for every style</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <!-- Jeans -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
                     <div class="avatar placeholder">
-                        <div class="bg-primary text-primary-content rounded-full w-24">
-                            <span class="text-3xl">👨</span>
+                        <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full w-20">
+                            <i class="fas fa-tshirt text-2xl"></i>
                         </div>
                     </div>
                 </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title">Men</h2>
-                    <p class="text-sm">Stylish clothing for men</p>
-                    <div class="card-actions">
-                        <a href="{% url 'product_list' %}?category=Men" class="btn btn-primary btn-sm">Shop Men</a>
-                    </div>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Jeans</h3>
+                    <p class="text-sm text-gray-400">Premium denim</p>
+                    <a href="{% url 'product_list' %}?item_type=jeans" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
                 </div>
             </div>
             
-            <!-- Women -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <figure class="px-10 pt-10">
+            <!-- Pants -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
                     <div class="avatar placeholder">
-                        <div class="bg-secondary text-secondary-content rounded-full w-24">
-                            <span class="text-3xl">👩</span>
+                        <div class="bg-gradient-to-br from-gray-600 to-gray-800 text-white rounded-full w-20">
+                            <i class="fas fa-vest text-2xl"></i>
                         </div>
                     </div>
                 </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title">Women</h2>
-                    <p class="text-sm">Elegant fashion for women</p>
-                    <div class="card-actions">
-                        <a href="{% url 'product_list' %}?category=Women" class="btn btn-secondary btn-sm">Shop Women</a>
-                    </div>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Pants</h3>
+                    <p class="text-sm text-gray-400">Formal & casual</p>
+                    <a href="{% url 'product_list' %}?item_type=pants" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
                 </div>
             </div>
             
-            <!-- Boys -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <figure class="px-10 pt-10">
+            <!-- Shirts -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
                     <div class="avatar placeholder">
-                        <div class="bg-accent text-accent-content rounded-full w-24">
-                            <span class="text-3xl">👦</span>
+                        <div class="bg-gradient-to-br from-green-600 to-green-800 text-white rounded-full w-20">
+                            <i class="fas fa-shirt text-2xl"></i>
                         </div>
                     </div>
                 </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title">Boys</h2>
-                    <p class="text-sm">Cool clothes for boys</p>
-                    <div class="card-actions">
-                        <a href="{% url 'product_list' %}?category=Boys" class="btn btn-accent btn-sm">Shop Boys</a>
-                    </div>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Shirts</h3>
+                    <p class="text-sm text-gray-400">Business & casual</p>
+                    <a href="{% url 'product_list' %}?item_type=shirts" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
                 </div>
             </div>
             
-            <!-- Girls -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <figure class="px-10 pt-10">
+            <!-- Suits -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
                     <div class="avatar placeholder">
-                        <div class="bg-info text-info-content rounded-full w-24">
-                            <span class="text-3xl">👧</span>
+                        <div class="bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-full w-20">
+                            <i class="fas fa-user-tie text-2xl"></i>
                         </div>
                     </div>
                 </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title">Girls</h2>
-                    <p class="text-sm">Pretty dresses for girls</p>
-                    <div class="card-actions">
-                        <a href="{% url 'product_list' %}?category=Girls" class="btn btn-info btn-sm">Shop Girls</a>
-                    </div>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Suits</h3>
+                    <p class="text-sm text-gray-400">Premium formal</p>
+                    <a href="{% url 'product_list' %}?item_type=suits" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
                 </div>
             </div>
             
-            <!-- Toddler -->
-            <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                <figure class="px-10 pt-10">
+            <!-- Frocks/Dresses -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
                     <div class="avatar placeholder">
-                        <div class="bg-success text-success-content rounded-full w-24">
-                            <span class="text-3xl">👶</span>
+                        <div class="bg-gradient-to-br from-pink-600 to-pink-800 text-white rounded-full w-20">
+                            <i class="fas fa-female text-2xl"></i>
                         </div>
                     </div>
                 </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title">Toddler</h2>
-                    <p class="text-sm">Comfortable baby clothes</p>
-                    <div class="card-actions">
-                        <a href="{% url 'product_list' %}?category=Toddler" class="btn btn-success btn-sm">Shop Toddler</a>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Dresses</h3>
+                    <p class="text-sm text-gray-400">Elegant styles</p>
+                    <a href="{% url 'product_list' %}?item_type=frocks" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
+                </div>
+            </div>
+            
+            <!-- Caps -->
+            <div class="netflix-card group cursor-pointer">
+                <figure class="px-6 pt-6">
+                    <div class="avatar placeholder">
+                        <div class="bg-gradient-to-br from-yellow-600 to-yellow-800 text-white rounded-full w-20">
+                            <i class="fas fa-hat-cowboy text-2xl"></i>
+                        </div>
                     </div>
+                </figure>
+                <div class="card-body items-center text-center py-4">
+                    <h3 class="font-bold text-white group-hover:text-red-400 transition-colors">Caps</h3>
+                    <p class="text-sm text-gray-400">Stylish headwear</p>
+                    <a href="{% url 'product_list' %}?item_type=caps" class="btn btn-sm netflix-red-btn mt-2">Shop</a>
                 </div>
             </div>
         </div>
@@ -111,154 +134,142 @@
 </div>
 
 <!-- Featured Products Section -->
-<div class="py-16 bg-base-200">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Featured Products</h2>
-            <p class="text-lg text-base-content opacity-70">Discover our best-selling items</p>
+<div class="py-20 bg-gradient-to-b from-gray-900 to-black">
+    <div class="container mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-white mb-4">Featured Products</h2>
+            <p class="text-gray-400 text-lg">Handpicked items that define contemporary fashion</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {% for product in products %}
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                <figure class="px-4 pt-4">
-                    <div class="w-full h-48 rounded-xl overflow-hidden">
-                        {% if product.pr_images %}
-                            <img src="{{ product.pr_images.url }}" 
-                                 alt="{{ product.pr_name }}" 
-                                 class="w-full h-full object-cover">
-                        {% else %}
-                            <div class="w-full h-full bg-base-300 flex items-center justify-center">
-                                <i class="fas fa-tshirt text-4xl text-base-content opacity-50"></i>
-                            </div>
-                        {% endif %}
-                    </div>
+            <div class="netflix-card group">
+                <figure class="px-6 pt-6">
+                    {% if product.pr_images %}
+                        <img src="{{ product.pr_images.url }}" alt="{{ product.pr_name }}" 
+                             class="rounded-lg w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                    {% else %}
+                        <div class="bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg w-full h-48 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                    {% if product.is_on_sale %}
+                        <div class="badge badge-error absolute top-2 right-2">Sale</div>
+                    {% endif %}
+                    {% if product.is_featured %}
+                        <div class="badge bg-red-600 text-white absolute top-2 left-2">Featured</div>
+                    {% endif %}
                 </figure>
-                <div class="card-body p-4">
-                    <h3 class="font-semibold text-lg line-clamp-2">{{ product.pr_name }}</h3>
-                    <div class="flex flex-wrap gap-1 mb-2">
-                        <span class="badge badge-primary badge-sm">{{ product.pr_cate }}</span>
-                        {% if product.pr_brand %}
-                            <span class="badge badge-secondary badge-sm">{{ product.pr_brand }}</span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Rating -->
-                    <div class="rating rating-sm mb-2">
-                        {% for i in "12345" %}
-                            {% if forloop.counter <= product.pr_reviews %}
-                                <input type="radio" name="rating-{{ product.pr_id }}" 
-                                       class="mask mask-star-2 bg-orange-400" checked disabled />
+                <div class="card-body p-6">
+                    <h3 class="card-title text-lg text-white group-hover:text-red-400 transition-colors">
+                        {{ product.pr_name }}
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-2">{{ product.pr_brand }}</p>
+                    <p class="text-gray-500 text-sm line-clamp-2">{{ product.pr_description }}</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="flex items-center gap-2">
+                            {% if product.is_on_sale and product.sale_price %}
+                                <span class="text-xl font-bold text-red-500">${{ product.sale_price }}</span>
+                                <span class="text-sm text-gray-500 line-through">${{ product.pr_price }}</span>
                             {% else %}
-                                <input type="radio" name="rating-{{ product.pr_id }}" 
-                                       class="mask mask-star-2 bg-base-300" disabled />
+                                <span class="text-xl font-bold text-white">${{ product.pr_price }}</span>
                             {% endif %}
-                        {% endfor %}
-                    </div>
-                    
-                    <!-- Price -->
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="text-xl font-bold text-primary">₹{{ product.pr_price }}</div>
-                        <!-- Stock indicator -->
-                        {% if product.pr_stk_quant > 0 %}
-                            {% if product.pr_stk_quant <= 5 %}
-                                <span class="text-orange-600 text-xs">Only {{ product.pr_stk_quant }} left</span>
-                            {% else %}
-                                <span class="text-green-600 text-xs">In Stock</span>
-                            {% endif %}
-                        {% else %}
-                            <span class="text-red-600 text-xs">Out of Stock</span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Actions -->
-                    <div class="card-actions justify-between">
-                        <a href="{% url 'product_detail' product.pr_id %}" class="btn btn-primary btn-sm">
-                            View Details
-                        </a>
-                        {% if user.is_authenticated and product.pr_stk_quant > 0 %}
-                            <button onclick="quickAddToCart('{{ product.pr_id }}')" class="btn btn-outline btn-sm" title="Add to Cart">
-                                <i class="fas fa-shopping-cart mr-1"></i>
-                                Add
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="addToCart({{ product.pr_id }})" 
+                                    class="btn btn-sm netflix-red-btn">
+                                <i class="fas fa-cart-plus"></i>
                             </button>
-                        {% elif user.is_authenticated %}
-                            <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm">
-                                <i class="fas fa-heart"></i>
+                            <a href="{% url 'product_detail' product.pr_id %}" 
+                               class="btn btn-sm btn-outline border-gray-500 text-gray-300 hover:bg-gray-700">
+                                <i class="fas fa-eye"></i>
                             </a>
-                        {% else %}
-                            <a href="{% url 'login' %}" class="btn btn-outline btn-sm">
-                                Login to Buy
-                            </a>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center text-gray-400 py-12">
+                <i class="fas fa-box-open text-6xl mb-4"></i>
+                <p class="text-xl">No products available at the moment.</p>
+                <p class="text-sm mt-2">Check back soon for amazing fashion items!</p>
             </div>
             {% endfor %}
         </div>
         
+        {% if products %}
         <div class="text-center mt-12">
-            <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
-                <i class="fas fa-th-large mr-2"></i>
+            <a href="{% url 'product_list' %}" class="btn netflix-red-btn btn-lg">
+                <i class="fas fa-grid-3x3 mr-2"></i>
                 View All Products
             </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Why Choose Us Section -->
+<div class="py-20 bg-gradient-to-b from-black to-gray-900">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center text-white mb-16">Why Choose ChazeFashion</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center netflix-card p-8">
+                <div class="avatar placeholder mb-6">
+                    <div class="bg-red-600 text-white rounded-full w-16">
+                        <i class="fas fa-truck text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">Fast Delivery</h3>
+                <p class="text-gray-400">Quick and reliable shipping to your doorstep with tracking available.</p>
+            </div>
+            
+            <div class="text-center netflix-card p-8">
+                <div class="avatar placeholder mb-6">
+                    <div class="bg-red-600 text-white rounded-full w-16">
+                        <i class="fas fa-award text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">Premium Quality</h3>
+                <p class="text-gray-400">Carefully selected materials and craftsmanship for lasting fashion.</p>
+            </div>
+            
+            <div class="text-center netflix-card p-8">
+                <div class="avatar placeholder mb-6">
+                    <div class="bg-red-600 text-white rounded-full w-16">
+                        <i class="fas fa-undo text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-4">Easy Returns</h3>
+                <p class="text-gray-400">30-day return policy with hassle-free exchanges and refunds.</p>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-// Quick add to cart function for home page
-function quickAddToCart(productId) {
-    const csrfToken = '{{ csrf_token }}';
-    
-    fetch(`/cart/add/${productId}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify({ quantity: 1 })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updateCartCounter(data.cart_count);
-            showMessage(data.message, 'success');
-        } else {
-            showMessage(data.message, 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showMessage('An error occurred. Please try again.', 'error');
-    });
-}
-
-// Show message function
-function showMessage(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'} shadow-lg fixed top-4 right-4 z-50 max-w-md`;
-    toast.innerHTML = `
-        <div>
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
+<!-- Newsletter Section -->
+<div class="py-16 bg-gradient-to-r from-red-900 to-black">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Stay Updated</h2>
+        <p class="text-gray-300 mb-8">Subscribe to get the latest fashion trends and exclusive offers</p>
+        <div class="flex justify-center">
+            <div class="join max-w-md w-full">
+                <input type="email" placeholder="Enter your email" 
+                       class="input input-bordered join-item flex-1 bg-white/10 border-white/20 text-white placeholder-gray-400">
+                <button class="btn netflix-red-btn join-item">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Subscribe
+                </button>
+            </div>
         </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
-}
-</script>
+    </div>
+</div>
 
 <style>
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 </style>
 {% endblock %}

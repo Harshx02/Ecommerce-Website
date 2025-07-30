@@ -3,251 +3,381 @@
 {% block title %}Products - ChazeFashion{% endblock %}
 
 {% block content %}
-<div class="container mx-auto">
-    <h1 class="text-3xl font-bold mb-8">Our Products</h1>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <!-- Filters Sidebar -->
-        <div class="lg:col-span-1">
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title text-lg mb-4">Filters</h2>
-                    
-                    <form method="get" class="space-y-4">
-                        <!-- Category Filter -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-semibold">Category</span>
-                            </label>
-                            <select name="category" class="select select-bordered w-full">
-                                <option value="">All Categories</option>
-                                {% for value, label in categories %}
-                                    <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- Season Filter -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-semibold">Season</span>
-                            </label>
-                            <select name="season" class="select select-bordered w-full">
-                                <option value="">All Seasons</option>
-                                {% for value, label in seasons %}
-                                    <option value="{{ value }}" {% if request.GET.season == value %}selected{% endif %}>
-                                        {{ label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- Price Range -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-semibold">Price Range</span>
-                            </label>
-                            <div class="flex gap-2">
-                                <input type="number" name="price_min" placeholder="Min" 
-                                       value="{{ request.GET.price_min }}" 
-                                       class="input input-bordered w-full" />
-                                <input type="number" name="price_max" placeholder="Max" 
-                                       value="{{ request.GET.price_max }}" 
-                                       class="input input-bordered w-full" />
-                            </div>
-                        </div>
-                        
-                        <!-- Fabric Filter -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-semibold">Fabric</span>
-                            </label>
-                            <input type="text" name="fabric" placeholder="e.g., Cotton, Silk" 
-                                   value="{{ request.GET.fabric }}" 
-                                   class="input input-bordered w-full" />
-                        </div>
-                        
-                        <!-- Brand Filter -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-semibold">Brand</span>
-                            </label>
-                            <input type="text" name="brand" placeholder="Search by brand" 
-                                   value="{{ request.GET.brand }}" 
-                                   class="input input-bordered w-full" />
-                        </div>
-                        
-                        <!-- Apply Filters Button -->
-                        <div class="form-control">
-                            <button type="submit" class="btn btn-primary">Apply Filters</button>
-                        </div>
-                        
-                        <!-- Clear Filters -->
-                        <div class="form-control">
-                            <a href="{% url 'product_list' %}" class="btn btn-outline">Clear Filters</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="min-h-screen bg-gradient-to-b from-black to-gray-900">
+    <div class="container mx-auto py-8">
+        <!-- Page Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-white mb-4">
+                {% if search_query %}
+                    Search Results
+                {% else %}
+                    Our Products
+                {% endif %}
+            </h1>
+            {% if search_query %}
+                <p class="text-gray-400 text-lg">
+                    Results for "<span class="text-red-500">{{ search_query }}</span>"
+                </p>
+            {% else %}
+                <p class="text-gray-400 text-lg">Discover premium fashion for every occasion</p>
+            {% endif %}
         </div>
         
-        <!-- Products Grid -->
-        <div class="lg:col-span-3">
-            <!-- Results Count -->
-            <div class="flex justify-between items-center mb-6">
-                <p class="text-base-content opacity-70">
-                    Showing {{ products.count }} product{{ products.count|pluralize }}
-                </p>
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Filters Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="netflix-card sticky top-24">
+                    <div class="p-6">
+                        <h2 class="text-xl font-bold text-white mb-6 flex items-center">
+                            <i class="fas fa-filter mr-2 text-red-500"></i>
+                            Filters
+                        </h2>
+                        
+                        <form method="get" class="space-y-6">
+                            <!-- Preserve search query -->
+                            {% if search_query %}
+                                <input type="hidden" name="search" value="{{ search_query }}">
+                            {% endif %}
+                            
+                            <!-- Item Type Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Item Type</span>
+                                </label>
+                                <select name="item_type" class="select select-bordered w-full bg-gray-800 border-gray-600 text-white">
+                                    <option value="">All Items</option>
+                                    {% for value, label in item_types %}
+                                        <option value="{{ value }}" {% if request.GET.item_type == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Category Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Category</span>
+                                </label>
+                                <select name="category" class="select select-bordered w-full bg-gray-800 border-gray-600 text-white">
+                                    <option value="">All Categories</option>
+                                    {% for value, label in categories %}
+                                        <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Size Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Size</span>
+                                </label>
+                                <select name="size" class="select select-bordered w-full bg-gray-800 border-gray-600 text-white">
+                                    <option value="">All Sizes</option>
+                                    {% for value, label in sizes %}
+                                        <option value="{{ value }}" {% if request.GET.size == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Season Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Season</span>
+                                </label>
+                                <select name="season" class="select select-bordered w-full bg-gray-800 border-gray-600 text-white">
+                                    <option value="">All Seasons</option>
+                                    {% for value, label in seasons %}
+                                        <option value="{{ value }}" {% if request.GET.season == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Price Range -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Price Range</span>
+                                </label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="number" name="price_min" placeholder="Min" 
+                                           value="{{ request.GET.price_min }}"
+                                           class="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400">
+                                    <input type="number" name="price_max" placeholder="Max" 
+                                           value="{{ request.GET.price_max }}"
+                                           class="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400">
+                                </div>
+                            </div>
+                            
+                            <!-- Brand Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Brand</span>
+                                </label>
+                                <input type="text" name="brand" placeholder="Enter brand name" 
+                                       value="{{ request.GET.brand }}"
+                                       class="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400">
+                            </div>
+                            
+                            <!-- Color Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold text-white">Color</span>
+                                </label>
+                                <input type="text" name="color" placeholder="Enter color" 
+                                       value="{{ request.GET.color }}"
+                                       class="input input-bordered w-full bg-gray-800 border-gray-600 text-white placeholder-gray-400">
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button type="submit" class="btn netflix-red-btn flex-1">
+                                    <i class="fas fa-search mr-2"></i>
+                                    Apply Filters
+                                </button>
+                                <a href="{% url 'product_list' %}" class="btn btn-outline border-gray-500 text-gray-300 hover:bg-gray-700">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </form>
+                        
+                        <!-- Quick Filter Buttons -->
+                        <div class="mt-8">
+                            <h3 class="text-white font-semibold mb-4">Quick Filters</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{% url 'product_list' %}?item_type=jeans" class="btn btn-sm btn-outline border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white">Jeans</a>
+                                <a href="{% url 'product_list' %}?item_type=shirts" class="btn btn-sm btn-outline border-green-500 text-green-400 hover:bg-green-500 hover:text-white">Shirts</a>
+                                <a href="{% url 'product_list' %}?item_type=suits" class="btn btn-sm btn-outline border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white">Suits</a>
+                                <a href="{% url 'product_list' %}?item_type=caps" class="btn btn-sm btn-outline border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-white">Caps</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- Products Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {% for product in products %}
-                <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                    <figure class="px-4 pt-4">
-                        {% if product.pr_images %}
-                            <img src="{{ product.pr_images.url }}" alt="{{ product.pr_name }}" 
-                                 class="rounded-xl h-48 w-full object-cover" />
+            <div class="lg:col-span-3">
+                <!-- Mobile Search Bar (visible on mobile only) -->
+                <div class="md:hidden mb-6">
+                    <form method="GET" action="{% url 'product_list' %}" class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Search products..." 
+                            class="input input-bordered w-full pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+                            value="{{ request.GET.search }}"
+                        />
+                    </form>
+                </div>
+                
+                <!-- Products Count -->
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-gray-400">
+                        {% if products %}
+                            Showing {{ products|length }} product{{ products|length|pluralize }}
                         {% else %}
-                            <div class="bg-base-300 rounded-xl h-48 w-full flex items-center justify-center">
-                                <i class="fas fa-tshirt text-6xl text-base-content opacity-50"></i>
-                            </div>
+                            No products found
                         {% endif %}
-                    </figure>
-                    <div class="card-body">
-                        <h2 class="card-title">{{ product.pr_name }}</h2>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="badge badge-primary">{{ product.pr_cate }}</span>
-                            <span class="badge badge-secondary">{{ product.pr_season }}</span>
+                    </p>
+                    
+                    <!-- Sort Options -->
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-sm btn-outline border-gray-500 text-gray-300 hover:bg-gray-700">
+                            <i class="fas fa-sort mr-2"></i>
+                            Sort By
                         </div>
-                        
-                        {% if product.pr_brand %}
-                            <p class="text-sm text-base-content opacity-70">Brand: {{ product.pr_brand }}</p>
-                        {% endif %}
-                        
-                        {% if product.pr_fabric %}
-                            <p class="text-sm text-base-content opacity-70">Fabric: {{ product.pr_fabric }}</p>
-                        {% endif %}
-                        
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="text-2xl font-bold text-primary">${{ product.pr_price }}</div>
-                            <div class="rating rating-sm">
-                                {% for i in "12345" %}
-                                    {% if forloop.counter <= product.pr_reviews %}
-                                        <input type="radio" name="rating-{{ product.pr_id }}" 
-                                               class="mask mask-star-2 bg-orange-400" checked disabled />
-                                    {% else %}
-                                        <input type="radio" name="rating-{{ product.pr_id }}" 
-                                               class="mask mask-star-2 bg-orange-400" disabled />
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-800 rounded-box w-52 text-white">
+                            <li><a href="?{{ request.GET.urlencode }}&sort=name">Name</a></li>
+                            <li><a href="?{{ request.GET.urlencode }}&sort=price_low">Price: Low to High</a></li>
+                            <li><a href="?{{ request.GET.urlencode }}&sort=price_high">Price: High to Low</a></li>
+                            <li><a href="?{{ request.GET.urlencode }}&sort=newest">Newest First</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                {% if products %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for product in products %}
+                        <div class="netflix-card group">
+                            <figure class="px-6 pt-6 relative">
+                                {% if product.pr_images %}
+                                    <img src="{{ product.pr_images.url }}" alt="{{ product.pr_name }}" 
+                                         class="rounded-lg w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                                {% else %}
+                                    <div class="bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg w-full h-48 flex items-center justify-center">
+                                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Badges -->
+                                <div class="absolute top-2 left-2 flex flex-col gap-1">
+                                    {% if product.is_featured %}
+                                        <div class="badge bg-red-600 text-white text-xs">Featured</div>
                                     {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        
-                        <!-- Stock Status -->
-                        {% if product.pr_stk_quant > 0 %}
-                            {% if product.pr_stk_quant <= 5 %}
-                                <div class="text-orange-600 text-xs mb-2">
-                                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                                    Only {{ product.pr_stk_quant }} left
+                                    {% if product.is_on_sale %}
+                                        <div class="badge badge-error text-xs">
+                                            -{{ product.discount_percentage|floatformat:0 }}%
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% else %}
-                                <div class="text-green-600 text-xs mb-2">
-                                    <i class="fas fa-check-circle mr-1"></i>
-                                    In Stock
+                                
+                                <!-- Quick Actions -->
+                                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    {% if user.is_authenticated %}
+                                        <button onclick="addToWishlist({{ product.pr_id }})" 
+                                                class="btn btn-sm btn-circle bg-black/50 text-white hover:bg-red-600 mb-2" 
+                                                title="Add to Wishlist">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="text-red-600 text-xs mb-2">
-                                <i class="fas fa-times-circle mr-1"></i>
-                                Out of Stock
-                            </div>
-                        {% endif %}
-                        
-                        <div class="card-actions justify-between">
-                            <a href="{% url 'product_detail' product.pr_id %}" class="btn btn-primary btn-sm">
-                                View Details
-                            </a>
-                            {% if user.is_authenticated and product.pr_stk_quant > 0 %}
-                                <div class="flex gap-1">
-                                    <button onclick="quickAddToCart({ product,pr_id })" class="btn btn-outline btn-sm" title="Add to Cart">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </button>
-                                    <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm" title="Add to Wishlist">
-                                        <i class="fas fa-heart"></i>
+                            </figure>
+                            
+                            <div class="card-body p-6">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div>
+                                        <h3 class="font-bold text-white group-hover:text-red-400 transition-colors line-clamp-2">
+                                            {{ product.pr_name }}
+                                        </h3>
+                                        <p class="text-sm text-gray-400">{{ product.pr_brand }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        {% if product.is_on_sale and product.sale_price %}
+                                            <div class="text-lg font-bold text-red-500">${{ product.sale_price }}</div>
+                                            <div class="text-sm text-gray-500 line-through">${{ product.pr_price }}</div>
+                                        {% else %}
+                                            <div class="text-lg font-bold text-white">${{ product.pr_price }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Product Details -->
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="badge badge-sm bg-gray-700 text-gray-300">{{ product.get_pr_item_type_display }}</span>
+                                    <span class="badge badge-sm bg-gray-700 text-gray-300">{{ product.pr_size }}</span>
+                                    <span class="badge badge-sm bg-gray-700 text-gray-300">{{ product.pr_color }}</span>
+                                </div>
+                                
+                                <!-- Stock Status -->
+                                <div class="mb-4">
+                                    {% if product.pr_stk_quant > 0 %}
+                                        {% if product.pr_stk_quant <= 5 %}
+                                            <span class="text-orange-400 text-xs">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Only {{ product.pr_stk_quant }} left
+                                            </span>
+                                        {% else %}
+                                            <span class="text-green-400 text-xs">
+                                                <i class="fas fa-check-circle"></i>
+                                                In Stock
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-red-400 text-xs">
+                                            <i class="fas fa-times-circle"></i>
+                                            Out of Stock
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Actions -->
+                                <div class="flex gap-2">
+                                    {% if user.is_authenticated and product.pr_stk_quant > 0 %}
+                                        <button onclick="addToCart({{ product.pr_id }})" 
+                                                class="btn btn-sm netflix-red-btn flex-1">
+                                            <i class="fas fa-cart-plus mr-1"></i>
+                                            Add to Cart
+                                        </button>
+                                    {% elif not user.is_authenticated %}
+                                        <a href="{% url 'login' %}" class="btn btn-sm netflix-red-btn flex-1">
+                                            <i class="fas fa-sign-in-alt mr-1"></i>
+                                            Login to Buy
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-sm btn-disabled flex-1" disabled>
+                                            <i class="fas fa-times mr-1"></i>
+                                            Out of Stock
+                                        </button>
+                                    {% endif %}
+                                    
+                                    <a href="{% url 'product_detail' product.pr_id %}" 
+                                       class="btn btn-sm btn-outline border-gray-500 text-gray-300 hover:bg-gray-700">
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                 </div>
-                            {% elif user.is_authenticated %}
-                                <a href="{% url 'add_to_wishlist' product.pr_id %}" class="btn btn-outline btn-sm" title="Add to Wishlist">
-                                    <i class="fas fa-heart"></i>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- No Products Found -->
+                    <div class="text-center py-16">
+                        <div class="netflix-card max-w-md mx-auto p-8">
+                            <i class="fas fa-search text-6xl text-gray-500 mb-4"></i>
+                            <h3 class="text-2xl font-bold text-white mb-2">No Products Found</h3>
+                            {% if search_query %}
+                                <p class="text-gray-400 mb-4">
+                                    We couldn't find any products matching "{{ search_query }}".
+                                </p>
+                                <p class="text-gray-400 mb-6">Try adjusting your search or browse our categories.</p>
+                                <a href="{% url 'product_list' %}" class="btn netflix-red-btn">
+                                    <i class="fas fa-grid-3x3 mr-2"></i>
+                                    Browse All Products
+                                </a>
+                            {% else %}
+                                <p class="text-gray-400 mb-6">
+                                    Try adjusting your filters or check back later for new products.
+                                </p>
+                                <a href="{% url 'product_list' %}" class="btn netflix-red-btn">
+                                    <i class="fas fa-refresh mr-2"></i>
+                                    Clear All Filters
                                 </a>
                             {% endif %}
                         </div>
                     </div>
-                </div>
-                {% empty %}
-                <div class="col-span-full text-center py-12">
-                    <div class="text-6xl mb-4">🔍</div>
-                    <h3 class="text-xl font-semibold mb-2">No products found</h3>
-                    <p class="text-base-content opacity-70 mb-4">
-                        Try adjusting your filters or browse all products.
-                    </p>
-                    <a href="{% url 'product_list' %}" class="btn btn-primary">View All Products</a>
-                </div>
-                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Quick add to cart function for product list
-function quickAddToCart(productId) {
-    const csrfToken = '{{ csrf_token }}';
-    
-    fetch(`/cart/add/${productId}/`, {
+// Add to wishlist function
+function addToWishlist(productId) {
+    fetch(`/wishlist/add/${productId}/`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify({ quantity: 1 })
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            updateCartCounter(data.cart_count);
-            showMessage(data.message, 'success');
+        if(data.success) {
+            showNotification('Added to wishlist!', 'success');
         } else {
-            showMessage(data.message, 'error');
+            showNotification(data.message || 'Error adding to wishlist', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showMessage('An error occurred. Please try again.', 'error');
+        showNotification('Error adding to wishlist', 'error');
     });
 }
-
-// Show message function
-function showMessage(message, type) {
-    // Create toast notification
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'} shadow-lg fixed top-4 right-4 z-50 max-w-md`;
-    toast.innerHTML = `
-        <div>
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
-}
 </script>
+
+<style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
 {% endblock %} 
